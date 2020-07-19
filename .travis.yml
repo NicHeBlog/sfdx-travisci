@@ -17,7 +17,7 @@ before_install:
 - sfdx --version
 - sfdx plugins --core
 - sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile assets/server.key.enc
-  --username $USERNAME --setdefaultdevhubusername -a DevHub
+  --username $USERNAME --setdefaultdevhubusername -a DevHub -r https://login.salesforce.com
 script:
 - sfdx force:org:create -v DevHub -s -f config/project-scratch-def.json -a ciorg --wait
   2
