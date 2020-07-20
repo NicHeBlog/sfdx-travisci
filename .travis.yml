@@ -34,13 +34,25 @@ before_install:
 - sfdx force:auth:jwt:grant --clientid $CONSUMERKEY --jwtkeyfile assets/server.key
   --username $USERNAME --setdefaultdevhubusername -a DevHub
 
+jobs:
+  include:
+    - stage: test
+      script:
+        - echo 'nic content from test stage'
+        #- sfdx force:org:create -v DevHub -s -f config/project-scratch-def.json -a ciorg
+        #- sfdx force:org:display -u ciorg
+        #- sfdx force:source:push -u ciorg
+        #- sfdx force:apex:test:run -u ciorg --wait 10
+        #- sfdx force:org:delete -u ciorg -p
+    - stage: deploy 
+      script: 
+        - echo 'nic content from deploy stage'
 
-script:
-- sfdx force:org:create -v DevHub -s -f config/project-scratch-def.json -a ciorg
-- sfdx force:org:display -u ciorg
-- sfdx force:source:push -u ciorg
-- sfdx force:apex:test:run -u ciorg --wait 10
-- sfdx force:org:delete -u ciorg -p
-
-after_success:
-- echo "nic content from after success!"
+stages:
+  - name: test
+    if: type = push AND branch != master
+    # require the type to be a PR
+    #if: type = pull_request
+  - name: deploy
+    # require the type to be push to master
+    if: type = push AND branch = master
