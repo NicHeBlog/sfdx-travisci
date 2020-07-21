@@ -50,9 +50,9 @@ jobs:
 
 stages:
   - name: test
-    # if: type = push AND branch != master
+    if: type = push AND branch != master
     # require the type to be a PR
-    if: type = pull_request
+    #if: type = pull_request
   - name: deploy
     # require the type to be push to master
     if: type = push AND branch = master
