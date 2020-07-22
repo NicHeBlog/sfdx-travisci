@@ -38,8 +38,8 @@ jobs:
   include:
     - stage: test
       script:
-        - echo 'content from dev stage'
-        - echo 'use for branch deploy/test' 
+        - echo 'content from test stage'
+        - echo 'use for unit test' 
         #- sfdx force:org:create -v DevHub -s -f config/project-scratch-def.json -a ciorg
         #- sfdx force:org:display -u ciorg
         #- sfdx force:source:push -u ciorg
