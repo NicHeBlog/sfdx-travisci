@@ -36,7 +36,7 @@ before_install:
 
 jobs:
   include:
-    - stage: dev
+    - stage: test
       script:
         - echo 'content from dev stage'
         - echo 'use for branch deploy/test' 
@@ -45,24 +45,30 @@ jobs:
         #- sfdx force:source:push -u ciorg
         #- sfdx force:apex:test:run -u ciorg --wait 10
         #- sfdx force:org:delete -u ciorg -p
-    - stage: deploy 
+    - stage: deploy
       script: 
         - echo 'content from deploy stage'
-        - echo 'use for master deploy'
-
-    - stage: pullRequest
-      script: 
-        - echo 'content from pullRequest stage'
-        - echo 'use for pull request'
+        - echo 'use for merge'
+        #Creates package version
+        - PACKAGEVERSION="$(sfdx force:package:version:create --package $PACKAGENAME --installationkeybypass --wait 10 --json --targetdevhubusername HubOrg | jq '.result.SubscriberPackageVersionId' | tr -d '"')"
+        - echo "Package Version Id - "${PACKAGEVERSION}
+        - echo "Waiting for 5 minutes for package replication"
+        - sleep 5m
+        #Creates scratch org
+        - sfdx force:org:create --targetdevhubusername DevHub --setdefaultusername --definitionfile config/project-scratch-def.json --setalias installorg --durationdays 1
+        #Installs package in scratch org
+        - sfdx force:package:install --package $PACKAGEVERSION --wait 10 --targetusername DevHub
+        #Runs unit tests on scratch org
+        - sfdx force:apex:test:run --targetusername DevHub --wait 10 --resultformat tap --codecoverage --testlevel $TESTLEVEL
+        #Deletes scratch org
+        - sfdx force:org:delete --targetusername DevHub --noprompt
 
 stages:
-  - name: dev
+  - name: test
     if: type = push AND branch != master
-    # require the type to be a PR
-    #if: type = pull_request
-  - name: deploy
+  #- name: deploy
     # require the type to be push to master
-    if: type = push AND branch = master
-  - name: pullRequest
+   # if: type = push AND branch = master
+  - name: deploy
     # require the type to be a PR.
     if: type = pull_request
