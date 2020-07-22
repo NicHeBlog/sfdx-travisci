@@ -65,7 +65,7 @@ jobs:
 
 stages:
   - name: test
-    if: type = push AND branch != master
+    if: type = push AND branch = test8
   #- name: 
     # require the type to be push to master
    # if: type = push AND branch = master
