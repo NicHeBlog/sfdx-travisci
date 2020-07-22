@@ -66,7 +66,7 @@ jobs:
 stages:
   - name: test
     if: type = push AND branch != master
-  #- name: deploy
+  #- name: 
     # require the type to be push to master
    # if: type = push AND branch = master
   - name: deploy
