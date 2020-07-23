@@ -70,5 +70,5 @@ stages:
     # require the type to be push to master
    # if: type = push AND branch = master
   - name: deploy
-    # require the type to be a PR..
+    # require the type to be a PR.
     if: type = pull_request
