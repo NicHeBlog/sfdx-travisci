@@ -39,12 +39,12 @@ jobs:
     - stage: test
       script:
         - echo 'content from test stage'
-        - echo 'use for unit test' 
-        #- sfdx force:org:create -v DevHub -s -f config/project-scratch-def.json -a ciorg
-        #- sfdx force:org:display -u ciorg
-        #- sfdx force:source:push -u ciorg
-        #- sfdx force:apex:test:run -u ciorg --wait 10
-        #- sfdx force:org:delete -u ciorg -p
+        - echo 'creating scratch org.....' 
+        - sfdx force:org:create -v DevHub -s -f config/project-scratch-def.json -a ciorg
+        - sfdx force:org:display -u ciorg
+        - sfdx force:source:push -u ciorg
+        - sfdx force:apex:test:run -u ciorg --wait 10
+        - sfdx force:org:delete -u ciorg -p
     - stage: deploy
       script: 
         - echo 'content from deploy stage'
@@ -70,5 +70,5 @@ stages:
     # require the type to be push to master
    # if: type = push AND branch = master
   - name: deploy
-    # require the type to be a PR..
+    # require the type to be a PR.
     if: type = pull_request
