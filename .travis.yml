@@ -39,7 +39,7 @@ jobs:
     - stage: test
       script:
         - echo 'content from test stage'
-        - echo 'creating scratch org.....' 
+        - echo 'creating scratch org to run unit test...' 
         - sfdx force:org:create -v DevHub -s -f config/project-scratch-def.json -a ciorg
         - sfdx force:org:display -u ciorg
         - sfdx force:source:push -u ciorg
@@ -66,6 +66,7 @@ jobs:
 stages:
   - name: test
     if: type = push AND branch !=master
+    #if: type = push AND branch !=master
   #- name: 
     # require the type to be push to master
    # if: type = push AND branch = master
